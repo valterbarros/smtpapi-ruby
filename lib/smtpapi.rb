@@ -1,4 +1,3 @@
-# -*- encoding: utf-8 -*-
 $LOAD_PATH.unshift File.dirname(__FILE__)
 require 'smtpapi/version'
 require 'json'
@@ -124,10 +123,13 @@ module Smtpapi
       data['asm_group_id'] = @asm_group_id.to_i unless @asm_group_id.nil?
       data['ip_pool'] = @ip_pool unless @ip_pool.nil?
       str_each_at = []
+
       @send_each_at.each do |val|
         str_each_at.push(val.to_i)
       end
+
       data['send_each_at'] = str_each_at unless str_each_at.empty?
+
       data
     end
 
@@ -142,8 +144,8 @@ module Smtpapi
     def escape_unicode(str)
       str.unpack('U*').map do |i|
         if i > 65_535
-          "\\u#{format('%04x', ((i - 0x10000) / 0x400 + 0xD800))}"\
-          "\\u#{format('%04x', ((i - 0x10000) % 0x400 + 0xDC00))}" if i > 65_535
+          "\\u#{format('%04x', ((i - 0x10000) / 0x400 + 0xD800))}" \
+          "\\u#{format('%04x', ((i - 0x10000) % 0x400 + 0xDC00))}"
         elsif i > 127
           "\\u#{format('%04x', i)}"
         else
